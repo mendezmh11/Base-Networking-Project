@@ -7,24 +7,29 @@ using UnityEngine;
 // This adds the DefaultStart enum and adds a public setting that can be set in the editor.
 // This setting allows you to define how it should behave when you build and run from unity.
 // Saves you one whole click.  You're welcome.
-public class NetworkCommandLine : MonoBehaviour {
+public class NetworkCommandLine : MonoBehaviour
+{
     private NetworkManager netManager;
-    public enum StartModes {
+    public enum StartModes
+    {
         CLIENT,
         SERVER,
         HOST,
         CHOOSE
     }
     public StartModes defaultStart = StartModes.CHOOSE;
-    
 
-    void Start() {
+
+    void Start()
+    {
         if (Application.isEditor) return;
         var args = GetCommandlineArgs();
         var startVal = defaultStart;
 
-        if (args.TryGetValue("-mlapi", out string mlapiValue)) {
-            switch (mlapiValue) {
+        if (args.TryGetValue("-mlapi", out string mlapiValue))
+        {
+            switch (mlapiValue)
+            {
                 case "server":
                     startVal = StartModes.SERVER;
                     break;
@@ -41,29 +46,39 @@ public class NetworkCommandLine : MonoBehaviour {
     }
 
 
-    public void StartAs(StartModes startVal) {
+    public void StartAs(StartModes startVal)
+    {
         netManager = GetComponentInParent<NetworkManager>();
 
-        if (!(netManager.IsClient || netManager.IsHost || netManager.IsServer)) {
-            if (startVal == StartModes.SERVER) {
+        if (!(netManager.IsClient || netManager.IsHost || netManager.IsServer))
+        {
+            if (startVal == StartModes.SERVER)
+            {
                 netManager.StartServer();
-            } else if (startVal == StartModes.CLIENT) {
+            }
+            else if (startVal == StartModes.CLIENT)
+            {
                 netManager.StartClient();
-            } else if (startVal == StartModes.HOST) {
+            }
+            else if (startVal == StartModes.HOST)
+            {
                 netManager.StartHost();
             }
         }
     }
 
 
-    private Dictionary<string, string> GetCommandlineArgs() {
+    private Dictionary<string, string> GetCommandlineArgs()
+    {
         Dictionary<string, string> argDictionary = new Dictionary<string, string>();
 
         var args = System.Environment.GetCommandLineArgs();
 
-        for (int i = 0; i < args.Length; ++i) {
+        for (int i = 0; i < args.Length; ++i)
+        {
             var arg = args[i].ToLower();
-            if (arg.StartsWith("-")) {
+            if (arg.StartsWith("-"))
+            {
                 var value = i < args.Length - 1 ? args[i + 1].ToLower() : null;
                 value = (value?.StartsWith("-") ?? false) ? null : value;
 
